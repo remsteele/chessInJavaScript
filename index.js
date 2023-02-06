@@ -23,31 +23,61 @@ window.addEventListener('DOMContentLoaded', () => {
         [2, 4, 6]
     ];
 
-    function handleResultValidation() {
+    // function handleResultValidation() {
+    //     let roundWon = false;
+    //     for (let i = 0; i <= 7; i++) {
+    //         const winCondition = winningConditions[i];
+    //         const a = board[winCondition[0]];
+    //         const b = board[winCondition[1]];
+    //         const c = board[winCondition[2]];
+    //         if (a === '' || b === '' || c === '') {
+    //             continue;
+    //         }
+    //         if (a === b && b === c) {
+    //             roundWon = true;
+    //             break;
+    //         }
+    //     }
+
+    //     if (roundWon) {
+    //         announce(currentPlayer === 'X' ? PLAYERX_WON : PLAYERO_WON);
+    //         isGameActive = false;
+    //         return;
+    //     }
+
+    //     if (!board.includes('')) {
+    //         announce(TIE);
+    //     }  
+    // }
+
+    function checkWin() {
         let roundWon = false;
         for (let i = 0; i <= 7; i++) {
             const winCondition = winningConditions[i];
             const a = board[winCondition[0]];
             const b = board[winCondition[1]];
             const c = board[winCondition[2]];
-            if (a === '' || b === '' || c === '') {
-                continue;
-            }
             if (a === b && b === c) {
                 roundWon = true;
-                break;
+                if (a == 'O') {
+                    return 10;
+                }
+                else if (a == 'X') {
+                    return -10;
+                }
             }
         }
+        return 0;
+    }
 
-        if (roundWon) {
-            announce(currentPlayer === 'X' ? PLAYERX_WON : PLAYERO_WON);
-            isGameActive = false;
-            return;
-        }
+    function displayWinner(player) {
+        // announce(currentPlayer === 'X' ? PLAYERX_WON : PLAYERO_WON);
+        announce('PLAYER' + player + '_WON')
+        isGameActive = false;
+    }
 
-        if (!board.includes('')) {
-            announce(TIE);
-        }  
+    function displayTie() {
+        announce(TIE);
     }
 
     function announce(type) {
@@ -88,7 +118,17 @@ window.addEventListener('DOMContentLoaded', () => {
             tile.innerText = currentPlayer;
             tile.classList.add('player' + currentPlayer);
             updateBoard(index);
-            handleResultValidation();
+            // checkwin and play computer move here
+            var eval = checkWin();
+            if (eval == 10) {
+                displayWinner('O');
+            }
+            else if (eval == -10) {
+                displayWinner('X');
+            }
+            else if (!board.includes('')) {
+                displayTie();
+            }
             changePlayer();
         }
     }
